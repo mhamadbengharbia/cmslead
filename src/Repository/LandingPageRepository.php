@@ -15,7 +15,24 @@ class LandingPageRepository extends ServiceEntityRepository
     {
         parent::__construct($registry, LandingPage::class);
     }
-
+    public function findOneByPartnerAndSlug(string $partnerSlug, string $landingSlug): ?\App\Entity\LandingPage
+    {
+        return $this->createQueryBuilder('lp')
+            ->innerJoin('lp.partner', 'p')
+            ->addSelect('p')
+            ->leftJoin('lp.landingTemplate', 'lt')
+            ->addSelect('lt')
+            ->leftJoin('lp.sections', 's')
+            ->addSelect('s')
+            ->andWhere('p.slug = :partnerSlug')
+            ->andWhere('lp.slug = :landingSlug')
+            ->andWhere('lp.isActive = true')
+            ->setParameter('partnerSlug', $partnerSlug)
+            ->setParameter('landingSlug', $landingSlug)
+            ->orderBy('s.sortOrder', 'ASC')
+            ->getQuery()
+            ->getOneOrNullResult();
+    }
 //    /**
 //     * @return LandingPage[] Returns an array of LandingPage objects
 //     */

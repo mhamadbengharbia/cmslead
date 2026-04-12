@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Dashboard Partner</title>
+</head>
+<body>
+    <div style="display: flex; justify-content: space-between; align-items: center;">
+        <h1>Bienvenue {{ partner.name }}</h1>
+        <a href="{{ path('app_logout') }}"
+           style="padding: 10px 14px; background: #dc2626; color: white; text-decoration: none; border-radius: 6px;">
+            Logout
+        </a>
+    </div>
+
+    <p>Slug : {{ partner.slug }}</p>
+
+    <h2>Mes leads</h2>
+
+    {% if leads is empty %}
+        <p>Aucun lead pour le moment.</p>
+    {% else %}
+        <table border="1" cellpadding="8" cellspacing="0">
+            <thead>
+                <tr>
+                    <th>Nom</th>
+                    <th>Email</th>
+                    <th>Téléphone</th>
+                    <th>Entreprise</th>
+                    <th>Message</th>
+                    <th>Date</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for lead in leads %}
+                    <tr>
+                        <td>{{ lead.fullName }}</td>
+                        <td>{{ lead.email }}</td>
+                        <td>{{ lead.phone }}</td>
+                        <td>{{ lead.company }}</td>
+                        <td>{{ lead.message }}</td>
+                        <td>{{ lead.createdAt|date('Y-m-d H:i') }}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% endif %}
+</body>
+</html>
