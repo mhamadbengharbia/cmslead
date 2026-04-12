@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Mes landing pages</title>
+</head>
+<body>
+    <div style="display:flex; justify-content:space-between; align-items:center;">
+        <h1>Landing pages de {{ partner.name }}</h1>
+        <a href="{{ path('app_logout') }}">Logout</a>
+    </div>
+
+    <p><a href="{{ path('partner_dashboard') }}">← Retour dashboard</a></p>
+
+    {% if landingPages is empty %}
+        <p>Aucune landing page.</p>
+    {% else %}
+        <table border="1" cellpadding="8" cellspacing="0">
+            <thead>
+                <tr>
+                    <th>Nom</th>
+                    <th>Slug</th>
+                    <th>Template</th>
+                    <th>Active</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for landingPage in landingPages %}
+                    <tr>
+                        <td>{{ landingPage.name }}</td>
+                        <td>{{ landingPage.slug }}</td>
+                        <td>{{ landingPage.landingTemplate.name }}</td>
+                        <td>{{ landingPage.isActive ? 'Oui' : 'Non' }}</td>
+                        <td>
+                            <a href="{{ path('partner_landing_page_edit', {id: landingPage.id}) }}">Modifier</a>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% endif %}
+</body>
+</html>
