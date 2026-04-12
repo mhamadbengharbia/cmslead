@@ -3,10 +3,13 @@
 namespace App\Entity;
 
 use App\Repository\LandingPageRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: LandingPageRepository::class)]
+#[ORM\UniqueConstraint(name: 'uniq_partner_landing_slug', fields: ['partner', 'slug'])]
 class LandingPage
 {
     #[ORM\Id]
@@ -17,34 +20,34 @@ class LandingPage
     #[ORM\Column(length: 255)]
     private ?string $name = null;
 
-    #[ORM\Column(length: 255)]
+    #[ORM\Column(length: 191)]
     private ?string $slug = null;
 
     #[ORM\Column(length: 255)]
     private ?string $title = null;
 
-    #[ORM\Column(type: Types::TEXT)]
+    #[ORM\Column(type: Types::TEXT, nullable: true)]
     private ?string $subtitle = null;
 
     #[ORM\Column(length: 255)]
     private ?string $ctaText = null;
 
-    #[ORM\Column(length: 255)]
+    #[ORM\Column(length: 255, nullable: true)]
     private ?string $heroImage = null;
 
-    #[ORM\Column(length: 20)]
+    #[ORM\Column(length: 20, nullable: true)]
     private ?string $primaryColor = null;
 
-    #[ORM\Column(length: 20)]
+    #[ORM\Column(length: 20, nullable: true)]
     private ?string $secondaryColor = null;
 
-    #[ORM\Column(length: 20)]
+    #[ORM\Column(length: 20, nullable: true)]
     private ?string $buttonColor = null;
 
-    #[ORM\Column(length: 255)]
+    #[ORM\Column(length: 255, nullable: true)]
     private ?string $formTitle = null;
 
-    #[ORM\Column(type: Types::TEXT)]
+    #[ORM\Column(type: Types::TEXT, nullable: true)]
     private ?string $successMessage = null;
 
     #[ORM\Column]
@@ -55,6 +58,33 @@ class LandingPage
 
     #[ORM\Column]
     private ?\DateTimeImmutable $updatedAt = null;
+
+    #[ORM\ManyToOne(inversedBy: 'landingPages')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?Partner $partner = null;
+
+    #[ORM\ManyToOne(inversedBy: 'landingPages')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?LandingTemplate $landingTemplate = null;
+
+    /**
+     * @var Collection<int, LandingPageSection>
+     */
+    #[ORM\OneToMany(mappedBy: 'landingPage', targetEntity: LandingPageSection::class, orphanRemoval: true)]
+    #[ORM\OrderBy(['sortOrder' => 'ASC'])]
+    private Collection $sections;
+
+    /**
+     * @var Collection<int, Lead>
+     */
+    #[ORM\OneToMany(mappedBy: 'landingPage', targetEntity: Lead::class)]
+    private Collection $leads;
+
+    public function __construct()
+    {
+        $this->sections = new ArrayCollection();
+        $this->leads = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -102,7 +132,7 @@ class LandingPage
         return $this->subtitle;
     }
 
-    public function setSubtitle(string $subtitle): static
+    public function setSubtitle(?string $subtitle): static
     {
         $this->subtitle = $subtitle;
 
@@ -126,7 +156,7 @@ class LandingPage
         return $this->heroImage;
     }
 
-    public function setHeroImage(string $heroImage): static
+    public function setHeroImage(?string $heroImage): static
     {
         $this->heroImage = $heroImage;
 
@@ -138,7 +168,7 @@ class LandingPage
         return $this->primaryColor;
     }
 
-    public function setPrimaryColor(string $primaryColor): static
+    public function setPrimaryColor(?string $primaryColor): static
     {
         $this->primaryColor = $primaryColor;
 
@@ -150,7 +180,7 @@ class LandingPage
         return $this->secondaryColor;
     }
 
-    public function setSecondaryColor(string $secondaryColor): static
+    public function setSecondaryColor(?string $secondaryColor): static
     {
         $this->secondaryColor = $secondaryColor;
 
@@ -162,7 +192,7 @@ class LandingPage
         return $this->buttonColor;
     }
 
-    public function setButtonColor(string $buttonColor): static
+    public function setButtonColor(?string $buttonColor): static
     {
         $this->buttonColor = $buttonColor;
 
@@ -174,7 +204,7 @@ class LandingPage
         return $this->formTitle;
     }
 
-    public function setFormTitle(string $formTitle): static
+    public function setFormTitle(?string $formTitle): static
     {
         $this->formTitle = $formTitle;
 
@@ -186,7 +216,7 @@ class LandingPage
         return $this->successMessage;
     }
 
-    public function setSuccessMessage(string $successMessage): static
+    public function setSuccessMessage(?string $successMessage): static
     {
         $this->successMessage = $successMessage;
 
@@ -225,6 +255,88 @@ class LandingPage
     public function setUpdatedAt(\DateTimeImmutable $updatedAt): static
     {
         $this->updatedAt = $updatedAt;
+
+        return $this;
+    }
+
+    public function getPartner(): ?Partner
+    {
+        return $this->partner;
+    }
+
+    public function setPartner(?Partner $partner): static
+    {
+        $this->partner = $partner;
+
+        return $this;
+    }
+
+    public function getLandingTemplate(): ?LandingTemplate
+    {
+        return $this->landingTemplate;
+    }
+
+    public function setLandingTemplate(?LandingTemplate $landingTemplate): static
+    {
+        $this->landingTemplate = $landingTemplate;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, LandingPageSection>
+     */
+    public function getSections(): Collection
+    {
+        return $this->sections;
+    }
+
+    public function addSection(LandingPageSection $section): static
+    {
+        if (!$this->sections->contains($section)) {
+            $this->sections->add($section);
+            $section->setLandingPage($this);
+        }
+
+        return $this;
+    }
+
+    public function removeSection(LandingPageSection $section): static
+    {
+        if ($this->sections->removeElement($section)) {
+            if ($section->getLandingPage() === $this) {
+                $section->setLandingPage(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Lead>
+     */
+    public function getLeads(): Collection
+    {
+        return $this->leads;
+    }
+
+    public function addLead(Lead $lead): static
+    {
+        if (!$this->leads->contains($lead)) {
+            $this->leads->add($lead);
+            $lead->setLandingPage($this);
+        }
+
+        return $this;
+    }
+
+    public function removeLead(Lead $lead): static
+    {
+        if ($this->leads->removeElement($lead)) {
+            if ($lead->getLandingPage() === $this) {
+                $lead->setLandingPage(null);
+            }
+        }
 
         return $this;
     }

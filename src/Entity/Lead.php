@@ -21,26 +21,34 @@ class Lead
     #[ORM\Column(length: 255)]
     private ?string $email = null;
 
-    #[ORM\Column(length: 50)]
+    #[ORM\Column(length: 50, nullable: true)]
     private ?string $phone = null;
 
-    #[ORM\Column(length: 255)]
+    #[ORM\Column(length: 255, nullable: true)]
     private ?string $company = null;
 
-    #[ORM\Column(type: Types::TEXT)]
+    #[ORM\Column(type: Types::TEXT, nullable: true)]
     private ?string $message = null;
 
-    #[ORM\Column(length: 255)]
+    #[ORM\Column(length: 255, nullable: true)]
     private ?string $utmSource = null;
 
-    #[ORM\Column(length: 255)]
+    #[ORM\Column(length: 255, nullable: true)]
     private ?string $utmMedium = null;
 
-    #[ORM\Column(length: 255)]
+    #[ORM\Column(length: 255, nullable: true)]
     private ?string $utmCampaign = null;
 
     #[ORM\Column]
     private ?\DateTimeImmutable $createdAt = null;
+
+    #[ORM\ManyToOne(inversedBy: 'leads')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?Partner $partner = null;
+
+    #[ORM\ManyToOne(inversedBy: 'leads')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?LandingPage $landingPage = null;
 
     public function getId(): ?int
     {
@@ -76,7 +84,7 @@ class Lead
         return $this->phone;
     }
 
-    public function setPhone(string $phone): static
+    public function setPhone(?string $phone): static
     {
         $this->phone = $phone;
 
@@ -88,7 +96,7 @@ class Lead
         return $this->company;
     }
 
-    public function setCompany(string $company): static
+    public function setCompany(?string $company): static
     {
         $this->company = $company;
 
@@ -100,7 +108,7 @@ class Lead
         return $this->message;
     }
 
-    public function setMessage(string $message): static
+    public function setMessage(?string $message): static
     {
         $this->message = $message;
 
@@ -112,7 +120,7 @@ class Lead
         return $this->utmSource;
     }
 
-    public function setUtmSource(string $utmSource): static
+    public function setUtmSource(?string $utmSource): static
     {
         $this->utmSource = $utmSource;
 
@@ -124,7 +132,7 @@ class Lead
         return $this->utmMedium;
     }
 
-    public function setUtmMedium(string $utmMedium): static
+    public function setUtmMedium(?string $utmMedium): static
     {
         $this->utmMedium = $utmMedium;
 
@@ -136,7 +144,7 @@ class Lead
         return $this->utmCampaign;
     }
 
-    public function setUtmCampaign(string $utmCampaign): static
+    public function setUtmCampaign(?string $utmCampaign): static
     {
         $this->utmCampaign = $utmCampaign;
 
@@ -151,6 +159,30 @@ class Lead
     public function setCreatedAt(\DateTimeImmutable $createdAt): static
     {
         $this->createdAt = $createdAt;
+
+        return $this;
+    }
+
+    public function getPartner(): ?Partner
+    {
+        return $this->partner;
+    }
+
+    public function setPartner(?Partner $partner): static
+    {
+        $this->partner = $partner;
+
+        return $this;
+    }
+
+    public function getLandingPage(): ?LandingPage
+    {
+        return $this->landingPage;
+    }
+
+    public function setLandingPage(?LandingPage $landingPage): static
+    {
+        $this->landingPage = $landingPage;
 
         return $this;
     }

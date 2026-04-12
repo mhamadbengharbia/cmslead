@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use App\Repository\LandingPageSectionRepository;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: LandingPageSectionRepository::class)]
@@ -19,7 +20,7 @@ class LandingPageSection
     #[ORM\Column]
     private ?bool $isEnabled = null;
 
-    #[ORM\Column(type: 'json', nullable: true)]
+    #[ORM\Column(type: Types::JSON, nullable: true)]
     private ?array $contentJson = null;
 
     #[ORM\Column]
@@ -30,6 +31,10 @@ class LandingPageSection
 
     #[ORM\Column]
     private ?\DateTimeImmutable $updatedAt = null;
+
+    #[ORM\ManyToOne(inversedBy: 'sections')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?LandingPage $landingPage = null;
 
     public function getId(): ?int
     {
@@ -65,7 +70,7 @@ class LandingPageSection
         return $this->contentJson;
     }
 
-    public function setContentJson(array $contentJson): static
+    public function setContentJson(?array $contentJson): static
     {
         $this->contentJson = $contentJson;
 
@@ -104,6 +109,18 @@ class LandingPageSection
     public function setUpdatedAt(\DateTimeImmutable $updatedAt): static
     {
         $this->updatedAt = $updatedAt;
+
+        return $this;
+    }
+
+    public function getLandingPage(): ?LandingPage
+    {
+        return $this->landingPage;
+    }
+
+    public function setLandingPage(?LandingPage $landingPage): static
+    {
+        $this->landingPage = $landingPage;
 
         return $this;
     }

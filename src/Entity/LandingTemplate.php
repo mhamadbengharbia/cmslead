@@ -3,10 +3,13 @@
 namespace App\Entity;
 
 use App\Repository\LandingTemplateRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: LandingTemplateRepository::class)]
+#[ORM\UniqueConstraint(name: 'uniq_landing_template_code', fields: ['code'])]
 class LandingTemplate
 {
     #[ORM\Id]
@@ -14,20 +17,31 @@ class LandingTemplate
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\Column(length: 255)]
+    #[ORM\Column(length: 100)]
     private ?string $code = null;
 
     #[ORM\Column(length: 255)]
     private ?string $name = null;
 
-    #[ORM\Column(type: Types::TEXT)]
+    #[ORM\Column(type: Types::TEXT, nullable: true)]
     private ?string $description = null;
 
-    #[ORM\Column(length: 255)]
+    #[ORM\Column(length: 255, nullable: true)]
     private ?string $previewImage = null;
 
     #[ORM\Column]
     private ?bool $isActive = null;
+
+    /**
+     * @var Collection<int, LandingPage>
+     */
+    #[ORM\OneToMany(mappedBy: 'landingTemplate', targetEntity: LandingPage::class)]
+    private Collection $landingPages;
+
+    public function __construct()
+    {
+        $this->landingPages = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -63,7 +77,7 @@ class LandingTemplate
         return $this->description;
     }
 
-    public function setDescription(string $description): static
+    public function setDescription(?string $description): static
     {
         $this->description = $description;
 
@@ -75,7 +89,7 @@ class LandingTemplate
         return $this->previewImage;
     }
 
-    public function setPreviewImage(string $previewImage): static
+    public function setPreviewImage(?string $previewImage): static
     {
         $this->previewImage = $previewImage;
 
@@ -90,6 +104,35 @@ class LandingTemplate
     public function setIsActive(bool $isActive): static
     {
         $this->isActive = $isActive;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, LandingPage>
+     */
+    public function getLandingPages(): Collection
+    {
+        return $this->landingPages;
+    }
+
+    public function addLandingPage(LandingPage $landingPage): static
+    {
+        if (!$this->landingPages->contains($landingPage)) {
+            $this->landingPages->add($landingPage);
+            $landingPage->setLandingTemplate($this);
+        }
+
+        return $this;
+    }
+
+    public function removeLandingPage(LandingPage $landingPage): static
+    {
+        if ($this->landingPages->removeElement($landingPage)) {
+            if ($landingPage->getLandingTemplate() === $this) {
+                $landingPage->setLandingTemplate(null);
+            }
+        }
 
         return $this;
     }
