@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Admin Landing Pages</title>
+</head>
+<body>
+    <h1>Toutes les landing pages</h1>
+
+    <p><a href="{{ path('admin_dashboard') }}">← Retour dashboard</a></p>
+
+    {% if landingPages is empty %}
+        <p>Aucune landing page.</p>
+    {% else %}
+        <table border="1" cellpadding="8" cellspacing="0">
+            <thead>
+                <tr>
+                    <th>Nom</th>
+                    <th>Slug</th>
+                    <th>Partner</th>
+                    <th>Template</th>
+                    <th>Active</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for landingPage in landingPages %}
+                    <tr>
+                        <td>{{ landingPage.name }}</td>
+                        <td>{{ landingPage.slug }}</td>
+                        <td>{{ landingPage.partner.name }}</td>
+                        <td>{{ landingPage.landingTemplate.name }}</td>
+                        <td>{{ landingPage.isActive ? 'Oui' : 'Non' }}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% endif %}
+</body>
+</html>

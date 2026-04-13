@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Modifier partner</title>
+</head>
+<body>
+    <div style="display:flex; justify-content:space-between; align-items:center;">
+        <h1>Modifier {{ partner.name }}</h1>
+        <a href="{{ path('app_logout') }}">Logout</a>
+    </div>
+
+    <p>
+        <a href="{{ path('admin_dashboard') }}">Dashboard</a> |
+        <a href="{{ path('admin_partner_index') }}">Liste des partners</a>
+    </p>
+
+    {% for message in app.flashes('success') %}
+        <div style="background:#dcfce7; color:#166534; padding:10px; margin-bottom:15px;">
+            {{ message }}
+        </div>
+    {% endfor %}
+
+    {% for message in app.flashes('error') %}
+        <div style="background:#fee2e2; color:#991b1b; padding:10px; margin-bottom:15px;">
+            {{ message }}
+        </div>
+    {% endfor %}
+
+    {{ form_start(form) }}
+        {{ form_row(form.name) }}
+        {{ form_row(form.slug) }}
+        {{ form_row(form.email) }}
+        {{ form_row(form.plainPassword) }}
+        {{ form_row(form.isActive) }}
+        {{ form_row(form.save) }}
+    {{ form_end(form) }}
+</body>
+</html>

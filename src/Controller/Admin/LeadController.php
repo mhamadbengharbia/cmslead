@@ -1,0 +1,20 @@
+<?php
+
+namespace App\Controller\Admin;
+
+use App\Repository\LeadRepository;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Routing\Attribute\Route;
+
+#[Route('/admin/leads')]
+final class LeadController extends AbstractController
+{
+    #[Route('', name: 'admin_lead_index', methods: ['GET'])]
+    public function index(LeadRepository $leadRepository): Response
+    {
+        return $this->render('admin/lead/index.html.twig', [
+            'leads' => $leadRepository->findBy([], ['createdAt' => 'DESC']),
+        ]);
+    }
+}

@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Admin Leads</title>
+</head>
+<body>
+    <h1>Tous les leads</h1>
+
+    <p><a href="{{ path('admin_dashboard') }}">← Retour dashboard</a></p>
+
+    {% if leads is empty %}
+        <p>Aucun lead.</p>
+    {% else %}
+        <table border="1" cellpadding="8" cellspacing="0">
+            <thead>
+                <tr>
+                    <th>Nom</th>
+                    <th>Email</th>
+                    <th>Partner</th>
+                    <th>Landing page</th>
+                    <th>Date</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for lead in leads %}
+                    <tr>
+                        <td>{{ lead.fullName }}</td>
+                        <td>{{ lead.email }}</td>
+                        <td>{{ lead.partner.name }}</td>
+                        <td>{{ lead.landingPage.name }}</td>
+                        <td>{{ lead.createdAt|date('Y-m-d H:i') }}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% endif %}
+</body>
+</html>

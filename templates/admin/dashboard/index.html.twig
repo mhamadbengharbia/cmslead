@@ -5,14 +5,30 @@
     <title>Dashboard Admin</title>
 </head>
 <body>
-    <div style="display: flex; justify-content: space-between; align-items: center;">
+    <div style="display:flex; justify-content:space-between; align-items:center;">
         <h1>Dashboard Admin</h1>
-        <a href="{{ path('app_logout') }}"
-           style="padding: 10px 14px; background: #dc2626; color: white; text-decoration: none; border-radius: 6px;">
-            Logout
-        </a>
+        <a href="{{ path('app_logout') }}">Logout</a>
     </div>
 
-    <p>Bienvenue admin.</p>
+    <div style="display:flex; gap:20px; margin:20px 0;">
+        <div style="padding:20px; border:1px solid #ccc;">
+            <h2>{{ partnerCount }}</h2>
+            <p>Partners</p>
+        </div>
+        <div style="padding:20px; border:1px solid #ccc;">
+            <h2>{{ landingPageCount }}</h2>
+            <p>Landing pages</p>
+        </div>
+        <div style="padding:20px; border:1px solid #ccc;">
+            <h2>{{ leadCount }}</h2>
+            <p>Leads</p>
+        </div>
+    </div>
+
+<ul>
+<li><a href="{{ path('admin_partner_index') }}">Gérer les partners</a></li>
+    <li><a href="{{ path('admin_lead_index') }}">Gérer les leads</a></li>
+    <li><a href="{{ path('admin_landing_page_index') }}">Gérer les landing pages</a></li>
+</ul>
 </body>
 </html>

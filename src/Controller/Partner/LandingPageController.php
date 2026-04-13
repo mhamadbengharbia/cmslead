@@ -3,6 +3,7 @@
 namespace App\Controller\Partner;
 
 use App\Entity\LandingPage;
+use App\Entity\User;
 use App\Form\LandingPageType;
 use App\Repository\LandingPageRepository;
 use Doctrine\ORM\EntityManagerInterface;
@@ -17,12 +18,12 @@ final class LandingPageController extends AbstractController
     #[Route('', name: 'partner_landing_page_index', methods: ['GET'])]
     public function index(LandingPageRepository $landingPageRepository): Response
     {
-        /** @var \App\Entity\User $user */
+        /** @var User|null $user */
         $user = $this->getUser();
         $partner = $user?->getPartner();
 
-        if (!$partner) {
-            throw $this->createAccessDeniedException('No partner linked to this account.');
+        if (!$user || !$user->isActive() || !$partner || !$partner->isActive()) {
+            throw $this->createAccessDeniedException('Votre accès partner est désactivé.');
         }
 
         $landingPages = $landingPageRepository->findBy(
@@ -42,11 +43,15 @@ final class LandingPageController extends AbstractController
         Request $request,
         EntityManagerInterface $entityManager
     ): Response {
-        /** @var \App\Entity\User $user */
+        /** @var User|null $user */
         $user = $this->getUser();
         $partner = $user?->getPartner();
 
-        if (!$partner || $landingPage->getPartner()?->getId() !== $partner->getId()) {
+        if (!$user || !$user->isActive() || !$partner || !$partner->isActive()) {
+            throw $this->createAccessDeniedException('Votre accès partner est désactivé.');
+        }
+
+        if ($landingPage->getPartner()?->getId() !== $partner->getId()) {
             throw $this->createAccessDeniedException('You cannot edit this landing page.');
         }
 

@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Admin Partners</title>
+</head>
+<body>
+    <div style="display:flex; justify-content:space-between; align-items:center;">
+        <h1>Tous les partners</h1>
+        <a href="{{ path('app_logout') }}">Logout</a>
+    </div>
+
+    <p>
+        <a href="{{ path('admin_dashboard') }}">← Retour dashboard</a> |
+        <a href="{{ path('admin_partner_new') }}">Créer un partner</a>
+    </p>
+
+    {% for message in app.flashes('success') %}
+        <div style="background:#dcfce7; color:#166534; padding:10px; margin-bottom:15px;">
+            {{ message }}
+        </div>
+    {% endfor %}
+
+    {% for message in app.flashes('error') %}
+        <div style="background:#fee2e2; color:#991b1b; padding:10px; margin-bottom:15px;">
+            {{ message }}
+        </div>
+    {% endfor %}
+
+    {% if partners is empty %}
+        <p>Aucun partner.</p>
+    {% else %}
+        <table border="1" cellpadding="8" cellspacing="0">
+            <thead>
+                <tr>
+                    <th>Nom</th>
+                    <th>Slug</th>
+                    <th>User</th>
+                    <th>Actif</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for partner in partners %}
+                    <tr>
+                        <td>{{ partner.name }}</td>
+                        <td>{{ partner.slug }}</td>
+                        <td>{{ partner.user.email }}</td>
+                        <td>{{ partner.isActive ? 'Oui' : 'Non' }}</td>
+                        <td>
+                            <a href="{{ path('admin_partner_edit', {id: partner.id}) }}">Modifier</a>
+
+                            <form method="post"
+                                  action="{{ path('admin_partner_toggle_status', {id: partner.id}) }}"
+                                  style="display:inline-block; margin-left:10px;">
+                                <input type="hidden" name="_token" value="{{ csrf_token('toggle_partner_' ~ partner.id) }}">
+                                <button type="submit">
+                                    {{ partner.isActive ? 'Désactiver' : 'Activer' }}
+                                </button>
+                            </form>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% endif %}
+</body>
+</html>

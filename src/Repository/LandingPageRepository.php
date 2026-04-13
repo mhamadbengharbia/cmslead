@@ -27,6 +27,7 @@ class LandingPageRepository extends ServiceEntityRepository
             ->andWhere('p.slug = :partnerSlug')
             ->andWhere('lp.slug = :landingSlug')
             ->andWhere('lp.isActive = true')
+            ->andWhere('p.isActive = true')
             ->setParameter('partnerSlug', $partnerSlug)
             ->setParameter('landingSlug', $landingSlug)
             ->orderBy('s.sortOrder', 'ASC')

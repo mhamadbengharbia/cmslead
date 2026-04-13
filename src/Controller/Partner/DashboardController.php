@@ -2,6 +2,7 @@
 
 namespace App\Controller\Partner;
 
+use App\Entity\User;
 use App\Repository\LeadRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
@@ -12,12 +13,12 @@ final class DashboardController extends AbstractController
     #[Route('/partner', name: 'partner_dashboard', methods: ['GET'])]
     public function index(LeadRepository $leadRepository): Response
     {
-        /** @var \App\Entity\User $user */
+        /** @var User|null $user */
         $user = $this->getUser();
         $partner = $user?->getPartner();
 
-        if (!$partner) {
-            throw $this->createAccessDeniedException('No partner linked to this account.');
+        if (!$user || !$user->isActive() || !$partner || !$partner->isActive()) {
+            throw $this->createAccessDeniedException('Votre accès partner est désactivé.');
         }
 
         $leads = $leadRepository->findBy(
