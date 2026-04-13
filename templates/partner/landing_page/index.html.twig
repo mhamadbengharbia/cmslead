@@ -1,44 +1,55 @@
-<!DOCTYPE html>
-<html lang="fr">
-<head>
-    <meta charset="UTF-8">
-    <title>Mes landing pages</title>
-</head>
-<body>
-    <div style="display:flex; justify-content:space-between; align-items:center;">
-        <h1>Landing pages de {{ partner.name }}</h1>
-        <a href="{{ path('app_logout') }}">Logout</a>
+{% extends 'partner/base.html.twig' %}
+
+{% block title %}Mes landing pages{% endblock %}
+{% block page_title %}Mes landing pages{% endblock %}
+
+{% block body %}
+    <div class="page-actions">
+        <a class="btn btn-secondary" href="{{ path('partner_dashboard') }}">Retour dashboard</a>
     </div>
 
-    <p><a href="{{ path('partner_dashboard') }}">← Retour dashboard</a></p>
-
-    {% if landingPages is empty %}
-        <p>Aucune landing page.</p>
-    {% else %}
-        <table border="1" cellpadding="8" cellspacing="0">
-            <thead>
-                <tr>
-                    <th>Nom</th>
-                    <th>Slug</th>
-                    <th>Template</th>
-                    <th>Active</th>
-                    <th>Action</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for landingPage in landingPages %}
+    <div class="table-wrapper">
+        {% if landingPages is empty %}
+            <p>Aucune landing page.</p>
+        {% else %}
+            <table>
+                <thead>
                     <tr>
-                        <td>{{ landingPage.name }}</td>
-                        <td>{{ landingPage.slug }}</td>
-                        <td>{{ landingPage.landingTemplate.name }}</td>
-                        <td>{{ landingPage.isActive ? 'Oui' : 'Non' }}</td>
-                        <td>
-                            <a href="{{ path('partner_landing_page_edit', {id: landingPage.id}) }}">Modifier</a>
-                        </td>
+                        <th>Nom</th>
+                        <th>Slug</th>
+                        <th>Template</th>
+                        <th>Statut</th>
+                        <th>URL</th>
+                        <th>Action</th>
                     </tr>
-                {% endfor %}
-            </tbody>
-        </table>
-    {% endif %}
-</body>
-</html>
+                </thead>
+                <tbody>
+                    {% for landingPage in landingPages %}
+                        <tr>
+                            <td>{{ landingPage.name }}</td>
+                            <td>{{ landingPage.slug }}</td>
+                            <td>{{ landingPage.landingTemplate.name }}</td>
+                            <td>
+                                {% if landingPage.isActive %}
+                                    <span class="status-active">Active</span>
+                                {% else %}
+                                    <span class="status-inactive">Inactive</span>
+                                {% endif %}
+                            </td>
+                            <td>
+                                <a href="/{{ partner.slug }}/{{ landingPage.slug }}" target="_blank">
+                                    Voir la page
+                                </a>
+                            </td>
+                            <td>
+                                <a class="btn btn-primary" href="{{ path('partner_landing_page_edit', {id: landingPage.id}) }}">
+                                    Modifier
+                                </a>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        {% endif %}
+    </div>
+{% endblock %}

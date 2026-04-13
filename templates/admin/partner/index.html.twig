@@ -47,18 +47,31 @@
                         <td>{{ partner.slug }}</td>
                         <td>{{ partner.user.email }}</td>
                         <td>{{ partner.isActive ? 'Oui' : 'Non' }}</td>
-                        <td>
-                            <a href="{{ path('admin_partner_edit', {id: partner.id}) }}">Modifier</a>
+                                                  
+                <td>
+                    <a href="{{ path('admin_partner_edit', {id: partner.id}) }}">Modifier</a>
 
-                            <form method="post"
-                                  action="{{ path('admin_partner_toggle_status', {id: partner.id}) }}"
-                                  style="display:inline-block; margin-left:10px;">
-                                <input type="hidden" name="_token" value="{{ csrf_token('toggle_partner_' ~ partner.id) }}">
-                                <button type="submit">
-                                    {{ partner.isActive ? 'Désactiver' : 'Activer' }}
-                                </button>
-                            </form>
-                        </td>
+                    <form method="post"
+                        action="{{ path('admin_partner_toggle_status', {id: partner.id}) }}"
+                        style="display:inline-block; margin-left:10px;">
+                        <input type="hidden" name="_token" value="{{ csrf_token('toggle_partner_' ~ partner.id) }}">
+                        <button type="submit">
+                            {{ partner.isActive ? 'Désactiver' : 'Activer' }}
+                        </button>
+                    </form>
+
+                    <form method="post"
+                        action="{{ path('admin_partner_delete', {id: partner.id}) }}"
+                        style="display:inline-block; margin-left:10px;"
+                        onsubmit="return confirm('Supprimer ce partner et toutes ses données ?');">
+                        <input type="hidden" name="_token" value="{{ csrf_token('delete_partner_' ~ partner.id) }}">
+                        <button type="submit" style="color:red;">
+                            Supprimer
+                        </button>
+                    </form>
+                </td>
+
+                        
                     </tr>
                 {% endfor %}
             </tbody>

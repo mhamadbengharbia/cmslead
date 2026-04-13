@@ -226,4 +226,38 @@ final class PartnerController extends AbstractController
 
         return $this->redirectToRoute('admin_partner_index');
     }
+
+    #[Route('/{id}/delete', name: 'admin_partner_delete', methods: ['POST'])]
+    public function delete(
+        Partner $partner,
+        Request $request,
+        EntityManagerInterface $entityManager
+    ): Response {
+        if (!$this->isCsrfTokenValid('delete_partner_'.$partner->getId(), (string) $request->request->get('_token'))) {
+            throw $this->createAccessDeniedException('Invalid CSRF token.');
+        }
+
+        $user = $partner->getUser();
+
+        foreach ($partner->getLeads() as $lead) {
+            $entityManager->remove($lead);
+        }
+
+        foreach ($partner->getLandingPages() as $landingPage) {
+            $entityManager->remove($landingPage);
+        }
+
+        $entityManager->remove($partner);
+
+        if ($user) {
+            $entityManager->remove($user);
+        }
+
+        $entityManager->flush();
+
+        $this->addFlash('success', 'Partner supprimé avec succès.');
+
+        return $this->redirectToRoute('admin_partner_index');
+    }
+
 }
