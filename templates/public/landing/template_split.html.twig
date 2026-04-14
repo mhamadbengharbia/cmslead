@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>{{ landingPage.title }}</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: {{ landingPage.secondaryColor ?: '#f8fafc' }};
+        }
+
+        .wrapper {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+
+        .split {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            align-items: center;
+        }
+
+        .box {
+            background: white;
+            border-radius: 16px;
+            padding: 24px;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.08);
+        }
+
+        h1 {
+            color: {{ landingPage.primaryColor ?: '#1D4ED8' }};
+        }
+
+        img {
+            width: 100%;
+            border-radius: 14px;
+            object-fit: cover;
+            max-height: 420px;
+        }
+
+        input, textarea, select {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #cbd5e1;
+            border-radius: 8px;
+            margin-top: 6px;
+        }
+
+        form div {
+            margin-bottom: 14px;
+        }
+
+        button {
+            background: {{ landingPage.buttonColor ?: '#2563EB' }};
+            color: white;
+            border: none;
+            padding: 14px 18px;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+<div class="wrapper">
+    <div class="split">
+        <div class="box">
+            <h1>{{ landingPage.title }}</h1>
+            <p>{{ landingPage.subtitle }}</p>
+
+            {% if landingPage.heroImage %}
+                <img src="{{ landingPage.heroImage }}" alt="{{ landingPage.title }}">
+            {% endif %}
+        </div>
+
+        <div class="box">
+            <h2>{{ landingPage.formTitle ?: 'Contactez-nous' }}</h2>
+
+            {{ form_start(leadForm) }}
+                {{ form_row(leadForm.fullName) }}
+                {{ form_row(leadForm.email) }}
+                {{ form_row(leadForm.phone) }}
+                {{ form_row(leadForm.company) }}
+                {{ form_row(leadForm.message) }}
+                {{ form_row(leadForm.submit) }}
+            {{ form_end(leadForm) }}
+        </div>
+    </div>
+</div>
+</body>
+</html>

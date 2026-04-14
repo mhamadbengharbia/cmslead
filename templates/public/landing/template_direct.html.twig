@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>{{ landingPage.name }} - {{ landingPage.slug }}</title>
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: {{ landingPage.secondaryColor ?: '#19a974' }};
+            color:#0f172a;
+        }
+
+        .page {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 40px 16px;
+        }
+
+        .phone {
+            width: 100%;
+            max-width: 1360px;
+            background: #f6f6f6;
+            border-radius: 32px;
+            overflow: hidden;
+            box-shadow: 0 24px 70px rgba(15, 23, 42, 0.28);
+            position: relative;
+        }
+
+        .hero {
+            position: relative;
+            min-height: 640px;
+         }
+
+        .hero img {
+            width: 100%;
+            height: 640px;
+            object-fit: cover;
+            display: block;
+            opacity: 0.92;
+        }
+
+        .hero-fallback {
+            height: 320px;
+            display: flex;
+            align-items: end;
+            padding: 24px;
+            color: white;
+            background: linear-gradient(180deg, #102334 0%, #18364b 100%);
+        }
+
+        .hero-top {
+            position: absolute;
+            top: 18px;
+            left: 18px;
+            right: 18px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 2;
+        }
+
+ 
+        .floating-card {
+            position: relative;
+            margin: -38px 16px 16px;
+            background: #ffffff;
+            border-radius: 28px;
+            padding: 24px 22px 20px;
+            box-shadow: 0 18px 40px rgba(15, 23, 42, 0.14);
+        }
+
+ 
+ 
+
+ 
+
+        .title {
+            margin: 0 0 10px 0;
+            font-size: 30px;
+            line-height: 1.15;
+            color: #111827;
+        }
+
+        .subtitle {
+            margin: 0 0 18px 0;
+            color: #475569;
+            line-height: 1.5;
+        }
+
+        .section-title {
+            margin: 18px 0 10px;
+            font-size: 15px;
+            font-weight: 700;
+            color: #111827;
+        }
+
+ 
+
+  
+        .chips {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .chip {
+            background: #f8fafc;
+            border: 1px solid #dbeafe;
+            border-radius: 18px;
+            text-align: center;
+            padding: 12px 8px;
+        }
+
+        .chip-icon {
+            width: 38px;
+            height: 38px;
+            margin: 0 auto 8px;
+            border-radius: 999px;
+            border: 2px solid {{ landingPage.primaryColor ?: '#0ea5e9' }};
+            color: {{ landingPage.primaryColor ?: '#0ea5e9' }};
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+            font-weight: bold;
+        }
+
+        .chip-label {
+            font-size: 12px;
+            color: #334155;
+            line-height: 1.25;
+        }
+
+        .testimonial-list {
+            margin: 0 0 18px 0;
+            padding-left: 18px;
+            color: #334155;
+        }
+
+        .testimonial-list li {
+            margin-bottom: 8px;
+        }
+
+        .cta-footer {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 16px;
+            margin-top: 10px;
+        }
+
+        .cta-text {
+            font-size: 14px;
+            color: #0f172a;
+        }
+
+        .cta-text strong {
+            display: block;
+            font-size: 20px;
+            color: #111827;
+            margin-bottom: 2px;
+        }
+
+        .cta-button,
+        button {
+            background: {{ landingPage.buttonColor ?: '#102334' }};
+            color: #ffffff;
+            border: none;
+            border-radius: 14px;
+            padding: 14px 18px;
+            font-weight: 700;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .form-wrap {
+            margin: 0 16px 18px;
+            background: #ffffff;
+            border-radius: 24px;
+            padding: 22px;
+            box-shadow: 0 16px 34px rgba(15, 23, 42, 0.12);
+        }
+
+        .form-wrap h2 {
+            margin-top: 0;
+            margin-bottom: 16px;
+            font-size: 24px;
+        }
+
+        form div {
+            margin-bottom: 12px;
+        }
+
+        input, textarea, select {
+            width: 100%;
+            padding: 12px 13px;
+            border: 1px solid #cbd5e1;
+            border-radius: 12px;
+            margin-top: 6px;
+            font: inherit;
+        }
+
+        textarea {
+            min-height: 110px;
+            resize: vertical;
+        }
+
+        .flash-success {
+            margin: 0 16px 16px;
+            background: #dcfce7;
+            color: #166534;
+            padding: 12px 14px;
+            border-radius: 14px;
+        }
+
+        @media (max-width: 520px) {
+            .title {
+                font-size: 26px;
+            }
+
+            .chips {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .gallery {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .cta-footer {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .cta-button,
+            button {
+                width: 100%;
+                text-align: center;
+            }
+        }
+    </style>
+</head>
+<body>
+{% set heroSection = null %}
+{% set benefitsSection = null %}
+{% set testimonialsSection = null %}
+
+{% for section in landingPage.sections %}
+    {% if section.sectionKey == 'hero' %}
+        {% set heroSection = section %}
+    {% elseif section.sectionKey == 'benefits' %}
+        {% set benefitsSection = section %}
+    {% elseif section.sectionKey == 'testimonials' %}
+        {% set testimonialsSection = section %}
+    {% endif %}
+{% endfor %}
+
+<div class="page">
+    <div class="phone">
+        {% for message in app.flashes('success') %}
+            <div class="flash-success">{{ message }}</div>
+        {% endfor %}
+
+        <section class="hero">
+            <div class="hero-top">
+                <div class="name">{{ landingPage.name }}</div>
+                <div class="slug">{{ landingPage.slug }}</div>
+            </div>
+
+            {% if landingPage.heroImage %}
+                <img src="{{ landingPage.heroImage }}" alt="{{ landingPage.title }}">
+            {% else %}
+                <div class="hero-fallback">
+                    <div>
+                        <h1 style="margin:0; font-size:28px;">{{ landingPage.title }}</h1>
+                        {% if landingPage.subtitle %}
+                            <p style="margin:10px 0 0 0; opacity:.9;">{{ landingPage.subtitle }}</p>
+                        {% endif %}
+                    </div>
+                </div>
+            {% endif %}
+        </section>
+
+        <section class="floating-card">
+       
+
+            <h1 class="title">{{ landingPage.title }}</h1>
+
+            {% if landingPage.subtitle %}
+                <p class="subtitle">{{ landingPage.subtitle }}</p>
+            {% endif %}
+
+       
+
+            {% if benefitsSection and benefitsSection.isEnabled and benefitsSection.contentJson.items is defined %}
+                <div class="section-title">{{ benefitsSection.contentJson.title ?? 'Avantages' }}</div>
+                <div class="chips">
+                    {% for item in benefitsSection.contentJson.items|slice(0, 4) %}
+                        <div class="chip">
+                            <div class="chip-icon">{{ loop.index }}</div>
+                            <div class="chip-label">{{ item }}</div>
+                        </div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+
+            {% if testimonialsSection and testimonialsSection.isEnabled and testimonialsSection.contentJson.items is defined %}
+                <div class="section-title">{{ testimonialsSection.contentJson.title ?? 'Avis clients' }}</div>
+                <ul class="testimonial-list">
+                    {% for item in testimonialsSection.contentJson.items|slice(0, 3) %}
+                        <li>{{ item }}</li>
+                    {% endfor %}
+                </ul>
+            {% endif %}
+
+            <div class="cta-footer">
+                <div class="cta-text">
+                    <strong>{{ landingPage.formTitle ?: 'Demandez votre devis' }}</strong>
+                    Laissez vos coordonnées et obtenez une réponse rapide.
+                </div>
+
+                <a href="#lead-form" class="cta-button">{{ landingPage.ctaText }}</a>
+            </div>
+        </section>
+
+        <section class="form-wrap" id="lead-form">
+            <h2>{{ landingPage.formTitle ?: 'Contactez-nous' }}</h2>
+
+            {{ form_start(leadForm) }}
+                {{ form_row(leadForm.fullName) }}
+                {{ form_row(leadForm.email) }}
+                {{ form_row(leadForm.phone) }}
+                {{ form_row(leadForm.company) }}
+                {{ form_row(leadForm.message) }}
+                {{ form_row(leadForm.submit) }}
+            {{ form_end(leadForm) }}
+        </section>
+    </div>
+</div>
+</body>
+</html>
