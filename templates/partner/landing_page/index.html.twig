@@ -37,9 +37,16 @@
                                 {% endif %}
                             </td>
                             <td>
-                                <a href="/{{ partner.slug }}/{{ landingPage.slug }}" target="_blank">
-                                    Voir la page
-                                </a>
+                             <a
+    href="{{ path('public_landing_show', {
+        partnerSlug: landingPage.partner.slug,
+        landingSlug: landingPage.slug
+    }) }}"
+    target="_blank"
+    class="btn btn-outline-primary"
+>
+    Voir la page
+</a>
                             </td>
                             <td>
                                 <a class="btn btn-primary" href="{{ path('partner_landing_page_edit', {id: landingPage.id}) }}">
