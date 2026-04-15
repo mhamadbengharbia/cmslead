@@ -1,39 +1,46 @@
-<!DOCTYPE html>
-<html lang="fr">
-<head>
-    <meta charset="UTF-8">
-    <title>Modifier partner</title>
-</head>
-<body>
-    <div style="display:flex; justify-content:space-between; align-items:center;">
-        <h1>Modifier {{ partner.name }}</h1>
-        <a href="{{ path('app_logout') }}">Logout</a>
+{% extends 'partner/base.html.twig' %}
+
+{% block title %}Modifier landing page{% endblock %}
+{% block page_title %}Modifier {{ landingPage.name }}{% endblock %}
+
+{% block body %}
+    <div class="page-actions">
+        <a class="btn btn-secondary" href="{{ path('partner_dashboard') }}">Dashboard</a>
+        <a class="btn btn-secondary" href="{{ path('partner_landing_page_index') }}">Mes landing pages</a>
     </div>
 
-    <p>
-        <a href="{{ path('admin_dashboard') }}">Dashboard</a> |
-        <a href="{{ path('admin_partner_index') }}">Liste des partners</a>
-    </p>
+    <div class="form-card">
+        {{ form_start(form) }}
+            {{ form_errors(form) }}
+            {{ form_row(form.name) }}
+            {{ form_row(form.slug) }}
+            {{ form_row(form.title) }}
+            {{ form_row(form.subtitle) }}
+            {{ form_row(form.ctaText) }}
+            {{ form_row(form.formTitle) }}
+            {{ form_row(form.successMessage) }}
+            {{ form_row(form.primaryColor) }}
+            {{ form_row(form.secondaryColor) }}
+            {{ form_row(form.buttonColor) }}
+            {{ form_row(form.landingTemplate) }}
+            {{ form_row(form.isActive) }}
+            {{ form_row(form.heroImage) }}
+            {{ form_row(form.save) }}
+        {{ form_end(form) }}
 
-    {% for message in app.flashes('success') %}
-        <div style="background:#dcfce7; color:#166534; padding:10px; margin-bottom:15px;">
-            {{ message }}
-        </div>
-    {% endfor %}
+        <hr style="margin: 24px 0;">
 
-    {% for message in app.flashes('error') %}
-        <div style="background:#fee2e2; color:#991b1b; padding:10px; margin-bottom:15px;">
-            {{ message }}
-        </div>
-    {% endfor %}
-
-    {{ form_start(form) }}
-        {{ form_row(form.name) }}
-        {{ form_row(form.slug) }}
-        {{ form_row(form.email) }}
-        {{ form_row(form.plainPassword) }}
-        {{ form_row(form.isActive) }}
-        {{ form_row(form.save) }}
-    {{ form_end(form) }}
-</body>
-</html>
+        <p>
+            <strong>URL publique :</strong>
+            <a href="{{ url('public_landing_show', {
+                partnerSlug: partner.slug,
+                landingSlug: landingPage.slug
+            }) }}" target="_blank">
+                {{ url('public_landing_show', {
+                    partnerSlug: partner.slug,
+                    landingSlug: landingPage.slug
+                }) }}
+            </a>
+        </p>
+    </div>
+{% endblock %}

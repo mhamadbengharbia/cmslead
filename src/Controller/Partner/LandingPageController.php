@@ -8,9 +8,11 @@ use App\Form\LandingPageType;
 use App\Repository\LandingPageRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\String\Slugger\AsciiSlugger;
 
 #[Route('/partner/landing-pages')]
 final class LandingPageController extends AbstractController
@@ -18,13 +20,7 @@ final class LandingPageController extends AbstractController
     #[Route('', name: 'partner_landing_page_index', methods: ['GET'])]
     public function index(LandingPageRepository $landingPageRepository): Response
     {
-        /** @var User|null $user */
-        $user = $this->getUser();
-        $partner = $user?->getPartner();
-
-        if (!$user || !$user->isActive() || !$partner || !$partner->isActive()) {
-            throw $this->createAccessDeniedException('Votre accès partner est désactivé.');
-        }
+        $partner = $this->getActivePartner();
 
         $landingPages = $landingPageRepository->findBy(
             ['partner' => $partner],
@@ -43,6 +39,52 @@ final class LandingPageController extends AbstractController
         Request $request,
         EntityManagerInterface $entityManager
     ): Response {
+        $partner = $this->getActivePartner();
+
+        if ($landingPage->getPartner()?->getId() !== $partner->getId()) {
+            throw $this->createAccessDeniedException('Vous ne pouvez pas modifier cette landing page.');
+        }
+
+        $form = $this->createForm(LandingPageType::class, $landingPage);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted()) {
+            $landingPage->setSlug($this->normalizeSlug((string) $landingPage->getSlug()));
+            $landingPage->setTitle($this->normalizeTitle((string) $landingPage->getTitle()));
+
+            $existingLandingPage = $entityManager->getRepository(LandingPage::class)->findOneBy([
+                'partner' => $partner,
+                'slug' => $landingPage->getSlug(),
+            ]);
+
+            if ($existingLandingPage && $existingLandingPage->getId() !== $landingPage->getId()) {
+                $form->get('slug')->addError(
+                    new FormError('Une landing page avec ce slug existe déjà pour ce partner.')
+                );
+            }
+
+            if ($form->isValid()) {
+                $landingPage->setUpdatedAt(new \DateTimeImmutable());
+
+                $entityManager->flush();
+
+                $this->addFlash('success', 'Landing page mise à jour avec succès.');
+
+                return $this->redirectToRoute('partner_landing_page_edit', [
+                    'id' => $landingPage->getId(),
+                ]);
+            }
+        }
+
+        return $this->render('partner/landing_page/edit.html.twig', [
+            'partner' => $partner,
+            'landingPage' => $landingPage,
+            'form' => $form->createView(),
+        ]);
+    }
+
+    private function getActivePartner(): \App\Entity\Partner
+    {
         /** @var User|null $user */
         $user = $this->getUser();
         $partner = $user?->getPartner();
@@ -51,28 +93,32 @@ final class LandingPageController extends AbstractController
             throw $this->createAccessDeniedException('Votre accès partner est désactivé.');
         }
 
-        if ($landingPage->getPartner()?->getId() !== $partner->getId()) {
-            throw $this->createAccessDeniedException('You cannot edit this landing page.');
+        return $partner;
+    }
+
+    private function normalizeSlug(string $slug): string
+    {
+        $slugger = new AsciiSlugger();
+
+        $slug = strtolower($slugger->slug(trim($slug))->toString());
+        $slug = preg_replace('/[^a-z-]+/', '-', $slug);
+        $slug = preg_replace('/-+/', '-', $slug);
+        $slug = trim((string) $slug, '-');
+
+        return $slug;
+    }
+
+    private function normalizeTitle(string $title): string
+    {
+        $title = trim($title);
+
+        if ($title === '') {
+            return $title;
         }
 
-        $form = $this->createForm(LandingPageType::class, $landingPage);
-        $form->handleRequest($request);
+        $first = mb_strtoupper(mb_substr($title, 0, 1));
+        $rest = mb_substr($title, 1);
 
-        if ($form->isSubmitted() && $form->isValid()) {
-            $landingPage->setUpdatedAt(new \DateTimeImmutable());
-            $entityManager->flush();
-
-            $this->addFlash('success', 'Landing page mise à jour avec succès.');
-
-            return $this->redirectToRoute('partner_landing_page_edit', [
-                'id' => $landingPage->getId(),
-            ]);
-        }
-
-        return $this->render('partner/landing_page/edit.html.twig', [
-            'partner' => $partner,
-            'landingPage' => $landingPage,
-            'form' => $form->createView(),
-        ]);
+        return $first.$rest;
     }
 }
