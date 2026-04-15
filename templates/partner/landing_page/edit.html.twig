@@ -28,11 +28,17 @@
 
         <hr style="margin: 24px 0;">
 
-        <p>
-            <strong>URL publique :</strong>
-            <a href="/{{ partner.slug }}/{{ landingPage.slug }}" target="_blank">
-                /{{ partner.slug }}/{{ landingPage.slug }}
-            </a>
-        </p>
+<p>
+    <strong>URL publique :</strong>
+    <a href="{{ url('public_landing_show', {
+        partnerSlug: partner.slug,
+        landingSlug: landingPage.slug
+    }) }}" target="_blank">
+        {{ url('public_landing_show', {
+            partnerSlug: partner.slug,
+            landingSlug: landingPage.slug
+        }) }}
+    </a>
+</p>
     </div>
 {% endblock %}

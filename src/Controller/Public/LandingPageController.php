@@ -61,12 +61,12 @@ final class LandingPageController extends AbstractController
             'template_reassurance' => 'public/landing/template_reassurance.html.twig',
             default => 'public/landing/template_direct.html.twig',
         };
-        $template = match ($templateCode) {
-            'template_direct' => 'public/landing/template_direct.html.twig',
-            'template_reassurance' => 'public/landing/template_reassurance.html.twig',
-            'template_split' => 'public/landing/template_split.html.twig',
-            default => 'public/landing/template_direct.html.twig',
-};
+                $template = match ($templateCode) {
+                    'template_direct' => 'public/landing/template_direct.html.twig',
+                    'template_reassurance' => 'public/landing/template_reassurance.html.twig',
+                    'template_3' => 'public/landing/template-3.html.twig',
+                    default => 'public/landing/template_direct.html.twig',
+                };
         return $this->render($template, [
             'landingPage' => $landingPage,
             'leadForm' => $form->createView(),

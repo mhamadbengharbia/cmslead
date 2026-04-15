@@ -75,6 +75,17 @@ class AppFixtures extends Fixture
 
         $manager->persist($templateReassurance);
 
+        $template3 = new LandingTemplate();
+        $template3->setCode('template_3');
+        $template3->setName('Template 3');
+        $template3->setDescription('Template premium visuel');
+        $template3->setPreviewImage(null);
+        $template3->setIsActive(true);
+
+        $manager->persist($template3);
+
+
+        
         // LANDING PAGE
         $landingPage = new LandingPage();
         $landingPage->setName('Offre Auto');

@@ -1,0 +1,97 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ landingPage.title }}{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" href="{{ asset('css/template-3.css') }}">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+{% endblock %}
+
+{% block body %}
+<header class="template3-header">
+    <div class="template3-container">
+        <div class="template3-navbar">
+            <a href="#" class="template3-brand">
+                {{ landingPage.partner.name }}
+            </a>
+
+            <nav class="template3-nav">
+                <a href="#hero">Accueil</a>
+                <a href="#services">Services</a>
+                <a href="#about">À propos</a>
+                <a href="#contact">Contact</a>
+            </nav>
+        </div>
+    </div>
+</header>
+
+<section id="hero" class="template3-hero">
+    <div class="template3-container">
+        <div class="template3-grid">
+            <div class="template3-image">
+                <div class="template3-shape">
+                    {% if landingPage.heroImage %}
+                        <img
+                            src="{{ landingPage.heroImage starts with 'http' ? landingPage.heroImage : asset(landingPage.heroImage) }}"
+                            alt="{{ landingPage.title }}"
+                        >
+                    {% endif %}
+                </div>
+            </div>
+
+            <div class="template3-content">
+                <h1>{{ landingPage.title }}</h1>
+                <p>{{ landingPage.subtitle }}</p>
+
+                <a href="#contact" class="template3-cta">
+                    {{ landingPage.ctaText ?: 'Découvrir' }}
+                </a>
+
+                <div class="template3-socials">
+                    <a href="#" aria-label="Facebook"><i class="bi bi-facebook"></i></a>
+                    <a href="#" aria-label="Instagram"><i class="bi bi-instagram"></i></a>
+                    <a href="#" aria-label="X"><i class="bi bi-twitter-x"></i></a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section id="services" class="template3-section template3-light">
+    <div class="template3-container">
+        <div class="template3-heading">
+            <span>Services</span>
+            <h2>Une expérience plus visuelle et premium</h2>
+            <p>
+                Ce template est pensé pour les partenaires qui veulent une landing page plus immersive.
+            </p>
+        </div>
+    </div>
+</section>
+
+<section id="contact" class="template3-section">
+    <div class="template3-container">
+        <div class="template3-heading">
+            <span>Contact</span>
+            <h2>{{ landingPage.formTitle ?: 'Faites votre demande' }}</h2>
+        </div>
+
+        <div class="template3-form-wrap">
+            {{ form_start(leadForm) }}
+                <div class="template3-form-grid">
+                    <div class="full">{{ form_row(leadForm.fullName) }}</div>
+                    <div>{{ form_row(leadForm.email) }}</div>
+                    <div>{{ form_row(leadForm.phone) }}</div>
+                    <div>{{ form_row(leadForm.company) }}</div>
+                    <div class="full">{{ form_row(leadForm.message) }}</div>
+                </div>
+
+                <button type="submit" class="template3-submit">
+                    {{ landingPage.ctaText ?: 'Envoyer' }}
+                </button>
+            {{ form_end(leadForm) }}
+        </div>
+    </div>
+</section>
+{% endblock %}
