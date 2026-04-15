@@ -1,0 +1,37 @@
+{% extends 'partner/base.html.twig' %}
+
+{% block title %}Nouvelle landing page{% endblock %}
+{% block page_title %}Nouvelle landing page{% endblock %}
+
+{% block body %}
+    <div class="page-actions" style="display:flex; gap:12px; align-items:center;">
+        <a class="btn btn-secondary" href="{{ path('partner_dashboard') }}">
+            Retour dashboard
+        </a>
+
+        <a class="btn btn-secondary" href="{{ path('partner_landing_page_index') }}">
+            Mes landing pages
+        </a>
+    </div>
+
+    <div class="form-card">
+        {{ form_start(form) }}
+            {{ form_errors(form) }}
+
+            {{ form_row(form.name) }}
+            {{ form_row(form.slug) }}
+            {{ form_row(form.title) }}
+            {{ form_row(form.subtitle) }}
+            {{ form_row(form.ctaText) }}
+            {{ form_row(form.formTitle) }}
+            {{ form_row(form.successMessage) }}
+            {{ form_row(form.primaryColor) }}
+            {{ form_row(form.secondaryColor) }}
+            {{ form_row(form.buttonColor) }}
+            {{ form_row(form.landingTemplate) }}
+            {{ form_row(form.isActive) }}
+            {{ form_row(form.heroImage) }}
+            {{ form_row(form.save) }}
+        {{ form_end(form) }}
+    </div>
+{% endblock %}

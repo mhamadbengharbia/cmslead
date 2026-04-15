@@ -4,6 +4,7 @@ namespace App\Form;
 
 use App\Entity\LandingPage;
 use App\Entity\LandingTemplate;
+use App\Repository\LandingTemplateRepository;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
@@ -149,6 +150,10 @@ class LandingPageType extends AbstractType
                 'choice_label' => 'name',
                 'label' => 'Landing template',
                 'placeholder' => 'Choisir un template',
+                'query_builder' => fn (LandingTemplateRepository $repository) => $repository
+                    ->createQueryBuilder('lt')
+                    ->andWhere('lt.isActive = true')
+                    ->orderBy('lt.name', 'ASC'),
                 'constraints' => [
                     new NotBlank(message: 'Le template est obligatoire.'),
                 ],
@@ -165,11 +170,14 @@ class LandingPageType extends AbstractType
                         max: 1000,
                         maxMessage: 'L’URL de l’image ne peut pas dépasser {{ limit }} caractères.'
                     ),
-                    new Url(message: 'Veuillez saisir une URL valide pour l’image.', protocols: ['http', 'https']),
+                    new Url(
+                        message: 'Veuillez saisir une URL valide pour l’image.',
+                        protocols: ['http', 'https']
+                    ),
                 ],
             ])
             ->add('save', SubmitType::class, [
-                'label' => 'Modifier',
+                'label' => $options['is_edit'] ? 'Modifier' : 'Créer',
             ]);
     }
 
@@ -177,6 +185,7 @@ class LandingPageType extends AbstractType
     {
         $resolver->setDefaults([
             'data_class' => LandingPage::class,
+            'is_edit' => true,
         ]);
     }
 }

@@ -4,9 +4,17 @@
 {% block page_title %}Mes landing pages{% endblock %}
 
 {% block body %}
-    <div class="page-actions">
-        <a class="btn btn-secondary" href="{{ path('partner_dashboard') }}">Retour dashboard</a>
-    </div>
+
+    
+    <div class="page-actions" style="display:flex; gap:12px; align-items:center;">
+    <a class="btn btn-secondary" href="{{ path('partner_dashboard') }}">
+        Retour dashboard
+    </a>
+
+    <a class="btn btn-primary" href="{{ path('partner_landing_page_new') }}">
+        Ajouter une landing page
+    </a>
+</div>
 
     <div class="table-wrapper">
         {% if landingPages is empty %}
